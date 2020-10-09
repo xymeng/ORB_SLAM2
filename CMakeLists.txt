@@ -111,3 +111,9 @@ add_executable(mono_euroc
 Examples/Monocular/mono_euroc.cc)
 target_link_libraries(mono_euroc ${PROJECT_NAME})
 
+
+set(PYBIND11_PYTHON_VERSION 3.6)
+set(PYTHON_EXECUTABLE /home/xymeng/anaconda2/envs/py36torch1.0/bin/python)
+add_subdirectory(pybind11)
+pybind11_add_module(orbslam2 python/OrbSLAM.cpp)
+target_link_libraries(orbslam2 PRIVATE ${PROJECT_NAME})

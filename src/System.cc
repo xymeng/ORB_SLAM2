@@ -489,4 +489,12 @@ vector<cv::KeyPoint> System::GetTrackedKeyPointsUn()
     return mTrackedKeyPointsUn;
 }
 
+vector<KeyFrame*> System::GetKeyFrames() {
+    return mpMap->GetAllKeyFrames();
+}
+
+void System::ForceRelocaliztion() {
+    mpTracker->mState = Tracking::LOST;
+}
+
 } //namespace ORB_SLAM

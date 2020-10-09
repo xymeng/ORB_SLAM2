@@ -1513,7 +1513,7 @@ void Tracking::Reset()
     }
 
     // Reset Local Mapping
-    cout << "Reseting Local Mapper...";
+    cout << "Reseting Local Mapper... " << "\n";
     mpLocalMapper->RequestReset();
     cout << " done" << endl;
 
@@ -1544,6 +1544,12 @@ void Tracking::Reset()
     mlpReferences.clear();
     mlFrameTimes.clear();
     mlbLost.clear();
+
+    mbVO = false;
+    mbOnlyTracking = false;
+    mVelocity = cv::Mat();
+    mnLastKeyFrameId = 0;
+    mnLastRelocFrameId = 0;
 
     if(mpViewer)
         mpViewer->Release();

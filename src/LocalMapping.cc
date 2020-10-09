@@ -105,7 +105,7 @@ void LocalMapping::Run()
         if(CheckFinish())
             break;
 
-        usleep(3000);
+        usleep(1000);
     }
 
     SetFinish();
@@ -712,6 +712,7 @@ void LocalMapping::RequestReset()
     while(1)
     {
         {
+            // cout << "Request reset " << mbResetRequested << "\n";
             unique_lock<mutex> lock2(mMutexReset);
             if(!mbResetRequested)
                 break;
@@ -725,6 +726,7 @@ void LocalMapping::ResetIfRequested()
     unique_lock<mutex> lock(mMutexReset);
     if(mbResetRequested)
     {
+        //cout << "Reset Requested\n";
         mlNewKeyFrames.clear();
         mlpRecentAddedMapPoints.clear();
         mbResetRequested=false;
