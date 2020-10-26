@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.12)
 project(ORB_SLAM2)
 
 IF(NOT CMAKE_BUILD_TYPE)
@@ -116,8 +116,11 @@ add_executable(mono_gopro
 target_link_libraries(mono_gopro ${PROJECT_NAME})
 
 
-set(PYBIND11_PYTHON_VERSION 3.6)
-set(PYTHON_EXECUTABLE /home/xymeng/anaconda2/envs/py36torch1.0/bin/python)
-add_subdirectory(pybind11)
-pybind11_add_module(orbslam2 python/OrbSLAM.cpp)
-target_link_libraries(orbslam2 PRIVATE ${PROJECT_NAME})
+set(BUILD_PYTHON_BINDING OFF)
+if(${BUILD_PYTHON_BINDING})
+   set(PYBIND11_PYTHON_VERSION 3)
+   find_package (PythonInterp 3.6 REQUIRED)
+   add_subdirectory(pybind11)
+   pybind11_add_module(orbslam2 python/OrbSLAM.cpp)
+   target_link_libraries(orbslam2 PRIVATE ${PROJECT_NAME})
+endif()
