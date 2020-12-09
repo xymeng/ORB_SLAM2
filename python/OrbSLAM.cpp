@@ -1,4 +1,3 @@
-
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/numpy.h>
@@ -70,7 +69,7 @@ public:
 
     vector<float> Localize(float timestamp, py::array_t<uint8_t> img) {
         if (should_relocalize) {
-            SLAM.ForceRelocaliztion();
+            // SLAM.ForceRelocalization();
             should_relocalize = false;
         }
 
