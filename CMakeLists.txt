@@ -116,7 +116,7 @@ add_executable(mono_gopro
 target_link_libraries(mono_gopro ${PROJECT_NAME})
 
 
-set(BUILD_PYTHON_BINDING OFF)
+option(BUILD_PYTHON_BINDING "Build python binding" OFF)
 if(${BUILD_PYTHON_BINDING})
    set(PYBIND11_PYTHON_VERSION 3)
    find_package (PythonInterp 3.6 REQUIRED)
