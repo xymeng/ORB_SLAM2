@@ -146,6 +146,7 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
             mDepthMapFactor = 1.0f/mDepthMapFactor;
     }
 
+    repeatBegin = false;
 }
 
 void Tracking::SetLocalMapper(LocalMapping *pLocalMapper)
@@ -324,11 +325,18 @@ void Tracking::Track()
         {
             // Localization Mode: Local Mapping is deactivated
 
+            if (repeatBegin) {
+                // First repeat frame
+                bOK = Relocalization();
+                cout << "[DEBUG] repeat begin localization " << bOK << "\n";
+            }
+
             if(mState==LOST)
             {
+                cout << "[DEBUG] relocalize\n";
                 bOK = Relocalization();
             }
-            else
+            else if (!repeatBegin)
             {
                 if(!mbVO)
                 {
@@ -405,14 +413,23 @@ void Tracking::Track()
             // mbVO true means that there are few matches to MapPoints in the map. We cannot retrieve
             // a local map and therefore we do not perform TrackLocalMap(). Once the system relocalizes
             // the camera we will use the local map again.
-            if(bOK && !mbVO)
+            if(bOK && !mbVO) {
                 bOK = TrackLocalMap();
+            }
         }
 
         if(bOK)
             mState = OK;
-        else
+        else {
+            cout << "[DEBUG] set state to LOST\n";
             mState=LOST;
+//            bOK = Relocalization();
+//            if (!bOK) {
+//                mState = LOST;
+//            } else {
+//                mState = OK;
+//            }
+        }
 
         // Update drawer
         mpFrameDrawer->Update(this);
@@ -503,6 +520,9 @@ void Tracking::Track()
         mlbLost.push_back(mState==LOST);
     }
 
+    if (repeatBegin) {
+        repeatBegin = false;
+    }
 }
 
 
@@ -817,8 +837,7 @@ void Tracking::UpdateLastFrame()
     {
         float z = mLastFrame.mvDepth[i];
         if(z>0)
-        {
-            vDepthIdx.push_back(make_pair(z,i));
+        {            vDepthIdx.push_back(make_pair(z,i));
         }
     }
 
@@ -1591,6 +1610,12 @@ void Tracking::ChangeCalibration(const string &strSettingPath)
 void Tracking::InformOnlyTracking(const bool &flag)
 {
     mbOnlyTracking = flag;
+
+    cout << "[DEBUG] inform only tracking\n";
+    repeatBegin = true;
+    mLastFrame = Frame();
+    mbVO = false;
+    mVelocity = cv::Mat();
 }
 
 

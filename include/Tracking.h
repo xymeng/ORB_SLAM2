@@ -207,6 +207,8 @@ protected:
     unsigned int mnLastKeyFrameId;
     unsigned int mnLastRelocFrameId;
 
+    bool repeatBegin;
+
     //Motion Model
     cv::Mat mVelocity;
 
